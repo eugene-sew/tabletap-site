@@ -1,8 +1,10 @@
-import React from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import Modal from '../components/Modal';
+import Header from '../components/Header';
+import DigitalMenuDemo from '../components/DigitalMenuDemo';
 import { 
-  Utensils, 
-  ArrowLeft, 
+  Utensils,
   Smartphone, 
   QrCode, 
   Clock, 
@@ -10,43 +12,27 @@ import {
   Users,
   Star,
   CheckCircle,
-  ArrowRight,
   Zap,
   Globe,
   BarChart3,
   Heart,
   Wifi,
-  RefreshCw
+  RefreshCw,
+  Phone,
+  Mail,
+  MapPin
 } from 'lucide-react';
 
 function DigitalMenu() {
+  const [showDemo, setShowDemo] = useState(false);
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <header className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-4">
-            <div className="flex items-center space-x-4">
-              <Link to="/" className="flex items-center text-gray-600 hover:text-orange-500 transition-colors">
-                <ArrowLeft className="h-5 w-5 mr-2" />
-                Back to Home
-              </Link>
-              <div className="flex items-center space-x-2">
-                <Utensils className="h-8 w-8 text-orange-500" />
-                <span className="text-2xl font-bold text-gray-900">TableTap</span>
-              </div>
-            </div>
-            <nav className="hidden md:flex space-x-8">
-              <Link to="/menu" className="text-orange-500 font-semibold">Digital Menu</Link>
-              <Link to="/pos" className="text-gray-700 hover:text-orange-500 transition-colors">POS System</Link>
-              <Link to="/cms" className="text-gray-700 hover:text-orange-500 transition-colors">CMS Platform</Link>
-            </nav>
-          </div>
-        </div>
-      </header>
+      <Header onDemoClick={() => setShowDemo(true)} />
 
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-orange-100 via-orange-50 to-white py-20">
+      <section className="bg-gradient-to-br from-orange-100 via-orange-50 to-white py-20 mt-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
@@ -66,16 +52,19 @@ function DigitalMenu() {
                 <button className="bg-orange-500 text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-orange-600 transition-all transform hover:scale-105 shadow-lg">
                   Start Free Trial
                 </button>
-                <button className="border-2 border-gray-800 text-gray-800 px-8 py-4 rounded-lg text-lg font-semibold hover:bg-gray-800 hover:text-white transition-all">
+                <button 
+                  onClick={() => setShowDemo(true)}
+                  className="border-2 border-gray-800 text-gray-800 px-8 py-4 rounded-lg text-lg font-semibold hover:bg-gray-800 hover:text-white transition-all"
+                >
                   View Demo
                 </button>
               </div>
             </div>
             <div className="relative">
               <div className="bg-white rounded-2xl shadow-2xl p-8 transform rotate-2 hover:rotate-0 transition-transform duration-300">
-                <div className="flex items-center justify-between mb-6">
-                  <QrCode className="h-8 w-8 text-orange-500" />
-                  <span className="text-sm font-medium text-gray-600">Scan & Order</span>
+                <div className="flex items-center">
+                  <MapPin className="h-5 w-5 mr-3 text-orange-400" />
+                  <span>Accra • Ho • Kumasi, Ghana</span>
                 </div>
                 <h3 className="text-2xl font-bold text-gray-900 mb-4">Bella Vista Menu</h3>
                 <div className="space-y-4">
@@ -344,7 +333,10 @@ function DigitalMenu() {
             <button className="bg-white text-orange-600 px-10 py-4 rounded-lg text-lg font-semibold hover:bg-gray-100 transition-all transform hover:scale-105 shadow-lg">
               Start Free Trial
             </button>
-            <button className="border-2 border-white text-white px-10 py-4 rounded-lg text-lg font-semibold hover:bg-white hover:text-orange-600 transition-all">
+            <button 
+              onClick={() => setShowDemo(true)}
+              className="border-2 border-white text-white px-10 py-4 rounded-lg text-lg font-semibold hover:bg-white hover:text-orange-600 transition-all"
+            >
               Schedule Demo
             </button>
           </div>
@@ -362,8 +354,26 @@ function DigitalMenu() {
                 <span className="text-2xl font-bold">TableTap</span>
               </Link>
               <p className="text-gray-300 mb-6 max-w-md">
-                Revolutionizing restaurant technology with digital menus, POS systems, and content management platforms.
+                A product of DataSight.Inc - The complete restaurant technology platform. Digital menus, POS systems, and content management all in one place.
               </p>
+            </div>
+            
+            <div>
+              <h4 className="text-lg font-semibold mb-4">Contact</h4>
+              <div className="space-y-3 text-gray-300">
+                <div className="flex items-center">
+                  <Phone className="h-5 w-5 mr-3 text-orange-400" />
+                  <span>0537211043</span>
+                </div>
+                <div className="flex items-center">
+                  <Mail className="h-5 w-5 mr-3 text-orange-400" />
+                  <span>info@datasight.inc</span>
+                </div>
+                <div className="flex items-center">
+                  <MapPin className="h-5 w-5 mr-3 text-orange-400" />
+                  <span>Accra • Ho • Kumasi, Ghana</span>
+                </div>
+              </div>
             </div>
             
             <div>
@@ -374,22 +384,18 @@ function DigitalMenu() {
                 <li><Link to="/cms" className="hover:text-orange-400 transition-colors">CMS Platform</Link></li>
               </ul>
             </div>
-            
-            <div>
-              <h4 className="text-lg font-semibold mb-4">Support</h4>
-              <ul className="space-y-2 text-gray-300">
-                <li><a href="#" className="hover:text-orange-400 transition-colors">Help Center</a></li>
-                <li><a href="#" className="hover:text-orange-400 transition-colors">Contact Us</a></li>
-                <li><a href="#" className="hover:text-orange-400 transition-colors">API Docs</a></li>
-              </ul>
-            </div>
           </div>
           
           <div className="border-t border-gray-700 mt-12 pt-8 text-center">
-            <p className="text-gray-400">© 2024 TableTap. All rights reserved.</p>
+            <p className="text-gray-400">© 2024 TableTap by DataSight.Inc. All rights reserved. Serving the future of dining in Ghana.</p>
           </div>
         </div>
       </footer>
+
+      {/* Demo Modal */}
+      <Modal isOpen={showDemo} onClose={() => setShowDemo(false)} size="full">
+        <DigitalMenuDemo onClose={() => setShowDemo(false)} />
+      </Modal>
     </div>
   );
 }

@@ -1,5 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import Modal from '../components/Modal';
+import Header from '../components/Header';
+import DigitalMenuDemo from '../components/DigitalMenuDemo';
+import POSDemo from '../components/POSDemo';
+import CMSDemo from '../components/CMSDemo';
+import ContactForm from '../components/ContactForm';
 import { 
   Menu, 
   CreditCard, 
@@ -22,31 +28,15 @@ import {
 } from 'lucide-react';
 
 function LandingPage() {
+  const [activeDemo, setActiveDemo] = useState<'menu' | 'pos' | 'cms' | null>(null);
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <header className="bg-white shadow-sm sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-4">
-            <Link to="/" className="flex items-center space-x-2">
-              <Utensils className="h-8 w-8 text-orange-500" />
-              <span className="text-2xl font-bold text-gray-900">TableTap</span>
-            </Link>
-            <nav className="hidden md:flex space-x-8">
-              <a href="#features" className="text-gray-700 hover:text-orange-500 transition-colors">Features</a>
-              <a href="#why-us" className="text-gray-700 hover:text-orange-500 transition-colors">Why TableTap</a>
-              <a href="#testimonials" className="text-gray-700 hover:text-orange-500 transition-colors">Reviews</a>
-              <a href="#contact" className="text-gray-700 hover:text-orange-500 transition-colors">Contact</a>
-            </nav>
-            <Link to="/menu" className="bg-orange-500 text-white px-6 py-2 rounded-lg hover:bg-orange-600 transition-colors">
-              Get Started
-            </Link>
-          </div>
-        </div>
-      </header>
+      <Header onDemoClick={setActiveDemo} />
 
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-orange-100 via-orange-50 to-orange-25 py-20 relative">
+      <section className="bg-gradient-to-br from-orange-100 via-orange-50 to-orange-25 py-20 relative mt-20">
         <div className="absolute inset-0 bg-gray-900 opacity-5"></div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-12 items-center relative z-10">
@@ -65,7 +55,10 @@ function LandingPage() {
                 <Link to="/menu" className="bg-orange-500 text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-orange-600 transition-all transform hover:scale-105 shadow-lg text-center">
                   Get Started Today
                 </Link>
-                <button className="border-2 border-gray-800 text-gray-800 px-8 py-4 rounded-lg text-lg font-semibold hover:bg-gray-800 hover:text-white transition-all">
+                <button 
+                  onClick={() => setActiveDemo('menu')}
+                  className="border-2 border-gray-800 text-gray-800 px-8 py-4 rounded-lg text-lg font-semibold hover:bg-gray-800 hover:text-white transition-all"
+                >
                   Book a Demo
                 </button>
               </div>
@@ -287,15 +280,99 @@ function LandingPage() {
             <Link to="/menu" className="bg-orange-500 text-white px-10 py-4 rounded-lg text-lg font-semibold hover:bg-orange-600 transition-all transform hover:scale-105 shadow-lg">
               Get Started Now
             </Link>
-            <button className="border-2 border-white text-white px-10 py-4 rounded-lg text-lg font-semibold hover:bg-white hover:text-gray-900 transition-all">
+            <button 
+              onClick={() => setActiveDemo('menu')}
+              className="border-2 border-white text-white px-10 py-4 rounded-lg text-lg font-semibold hover:bg-white hover:text-gray-900 transition-all"
+            >
               Request a Demo
             </button>
           </div>
         </div>
       </section>
 
+      {/* Contact Section */}
+      <section id="contact" className="py-20 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Ready to Get Started?</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Join hundreds of restaurants in Ghana already using TableTap to enhance their customer experience and streamline operations.
+            </p>
+          </div>
+          
+          <div className="grid lg:grid-cols-2 gap-12 items-start">
+            {/* Contact Info */}
+            <div className="space-y-8">
+              <div>
+                <h3 className="text-2xl font-bold text-gray-900 mb-6">Let's Transform Your Restaurant</h3>
+                <p className="text-gray-600 mb-8">
+                  Our team is ready to help you implement the perfect TableTap solution for your restaurant. 
+                  From digital menus to complete POS systems, we'll guide you every step of the way.
+                </p>
+              </div>
+              
+              <div className="space-y-6">
+                <div className="flex items-start">
+                  <div className="flex-shrink-0">
+                    <div className="flex items-center justify-center h-12 w-12 rounded-lg bg-orange-500">
+                      <Phone className="h-6 w-6 text-white" />
+                    </div>
+                  </div>
+                  <div className="ml-4">
+                    <h4 className="text-lg font-semibold text-gray-900">Call Us</h4>
+                    <p className="text-gray-600">Speak with our team directly</p>
+                    <a href="tel:0537211043" className="text-orange-500 hover:text-orange-600 font-medium">
+                      0537211043
+                    </a>
+                  </div>
+                </div>
+                
+                <div className="flex items-start">
+                  <div className="flex-shrink-0">
+                    <div className="flex items-center justify-center h-12 w-12 rounded-lg bg-orange-500">
+                      <Mail className="h-6 w-6 text-white" />
+                    </div>
+                  </div>
+                  <div className="ml-4">
+                    <h4 className="text-lg font-semibold text-gray-900">Email Us</h4>
+                    <p className="text-gray-600">Get detailed information</p>
+                    <a href="mailto:info@datasight.inc" className="text-orange-500 hover:text-orange-600 font-medium">
+                      info@datasight.inc
+                    </a>
+                  </div>
+                </div>
+                
+                <div className="flex items-start">
+                  <div className="flex-shrink-0">
+                    <div className="flex items-center justify-center h-12 w-12 rounded-lg bg-orange-500">
+                      <MapPin className="h-6 w-6 text-white" />
+                    </div>
+                  </div>
+                  <div className="ml-4">
+                    <h4 className="text-lg font-semibold text-gray-900">Visit Us</h4>
+                    <p className="text-gray-600">We're located across Ghana</p>
+                    <p className="text-orange-500 font-medium">Accra • Ho • Kumasi</p>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="bg-orange-50 rounded-xl p-6">
+                <h4 className="text-lg font-semibold text-gray-900 mb-2">🚀 Quick Setup Promise</h4>
+                <p className="text-gray-600">
+                  Most restaurants are up and running with TableTap in under 24 hours. 
+                  Our team handles the entire setup process for you.
+                </p>
+              </div>
+            </div>
+            
+            {/* Contact Form */}
+            <ContactForm />
+          </div>
+        </div>
+      </section>
+
       {/* Footer */}
-      <footer id="contact" className="text-white py-16" style={{backgroundColor: '#333333'}}>
+      <footer className="text-white py-16" style={{backgroundColor: '#333333'}}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-4 gap-8">
             <div className="col-span-2">
@@ -304,7 +381,7 @@ function LandingPage() {
                 <span className="text-2xl font-bold">TableTap</span>
               </Link>
               <p className="text-gray-300 mb-6 max-w-md">
-                The complete restaurant technology platform. Digital menus, POS systems, and content management all in one place.
+                A product of DataSight.Inc - The complete restaurant technology platform. Digital menus, POS systems, and content management all in one place.
               </p>
               <div className="flex space-x-4">
                 <Twitter className="h-6 w-6 text-gray-400 hover:text-orange-400 cursor-pointer transition-colors" />
@@ -328,25 +405,38 @@ function LandingPage() {
               <div className="space-y-3 text-gray-300">
                 <div className="flex items-center">
                   <Phone className="h-5 w-5 mr-3 text-orange-400" />
-                  <span>1-800-TABLETAP</span>
+                  <span>0537211043</span>
                 </div>
                 <div className="flex items-center">
                   <Mail className="h-5 w-5 mr-3 text-orange-400" />
-                  <span>hello@tabletap.com</span>
+                  <span>info@datasight.inc</span>
                 </div>
                 <div className="flex items-center">
                   <MapPin className="h-5 w-5 mr-3 text-orange-400" />
-                  <span>San Francisco, CA</span>
+                  <span>Accra • Ho • Kumasi, Ghana</span>
                 </div>
               </div>
             </div>
           </div>
           
           <div className="border-t border-gray-700 mt-12 pt-8 text-center">
-            <p className="text-gray-400">© 2024 TableTap. All rights reserved. Serving the future of dining.</p>
+            <p className="text-gray-400">© 2024 TableTap by DataSight.Inc. All rights reserved. Serving the future of dining in Ghana.</p>
           </div>
         </div>
       </footer>
+
+      {/* Demo Modals */}
+      <Modal isOpen={activeDemo === 'menu'} onClose={() => setActiveDemo(null)} size="full">
+        <DigitalMenuDemo onClose={() => setActiveDemo(null)} />
+      </Modal>
+      
+      <Modal isOpen={activeDemo === 'pos'} onClose={() => setActiveDemo(null)} size="full">
+        <POSDemo onClose={() => setActiveDemo(null)} />
+      </Modal>
+      
+      <Modal isOpen={activeDemo === 'cms'} onClose={() => setActiveDemo(null)} size="full">
+        <CMSDemo onClose={() => setActiveDemo(null)} />
+      </Modal>
     </div>
   );
 }
