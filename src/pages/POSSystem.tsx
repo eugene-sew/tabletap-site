@@ -1,138 +1,27 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { 
   Utensils, 
   ArrowLeft, 
-  Search, 
   CreditCard, 
-  DollarSign,
+  Zap, 
+  Shield, 
   Clock,
-  Users,
   TrendingUp,
-  ShoppingCart,
-  Plus,
-  Minus,
-  Trash2,
-  Receipt,
-  Printer,
+  Users,
+  Star,
+  CheckCircle,
+  ArrowRight,
+  BarChart3,
+  Smartphone,
   Wifi,
-  Battery,
+  DollarSign,
+  Receipt,
+  Package,
   Settings
 } from 'lucide-react';
 
-interface OrderItem {
-  id: number;
-  name: string;
-  price: number;
-  quantity: number;
-  category: string;
-  notes?: string;
-}
-
-interface Table {
-  id: number;
-  number: string;
-  status: 'available' | 'occupied' | 'reserved';
-  guests: number;
-  server: string;
-  orderTotal: number;
-}
-
-const quickItems = [
-  { id: 1, name: "Caesar Salad", price: 16, category: "Salads" },
-  { id: 2, name: "Grilled Salmon", price: 28, category: "Mains" },
-  { id: 3, name: "Pasta Primavera", price: 22, category: "Mains" },
-  { id: 4, name: "Chocolate Cake", price: 12, category: "Desserts" },
-  { id: 5, name: "Coffee", price: 4, category: "Beverages" },
-  { id: 6, name: "Wine Glass", price: 12, category: "Beverages" },
-  { id: 7, name: "Truffle Risotto", price: 24, category: "Mains" },
-  { id: 8, name: "Craft Beer", price: 8, category: "Beverages" }
-];
-
-const tables: Table[] = [
-  { id: 1, number: "T1", status: "occupied", guests: 4, server: "Alice", orderTotal: 85.50 },
-  { id: 2, number: "T2", status: "available", guests: 0, server: "", orderTotal: 0 },
-  { id: 3, number: "T3", status: "occupied", guests: 2, server: "Bob", orderTotal: 42.00 },
-  { id: 4, number: "T4", status: "reserved", guests: 6, server: "Carol", orderTotal: 0 },
-  { id: 5, number: "T5", status: "occupied", guests: 3, server: "Alice", orderTotal: 67.25 },
-  { id: 6, number: "T6", status: "available", guests: 0, server: "", orderTotal: 0 }
-];
-
 function POSSystem() {
-  const [currentOrder, setCurrentOrder] = useState<OrderItem[]>([]);
-  const [selectedTable, setSelectedTable] = useState<Table | null>(null);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [activeTab, setActiveTab] = useState<'order' | 'tables' | 'reports'>('order');
-  const [paymentMethod, setPaymentMethod] = useState<'card' | 'cash' | 'split'>('card');
-
-  const filteredItems = quickItems.filter(item =>
-    item.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  const addToOrder = (item: typeof quickItems[0]) => {
-    setCurrentOrder(prev => {
-      const existing = prev.find(orderItem => orderItem.id === item.id);
-      if (existing) {
-        return prev.map(orderItem =>
-          orderItem.id === item.id
-            ? { ...orderItem, quantity: orderItem.quantity + 1 }
-            : orderItem
-        );
-      }
-      return [...prev, { ...item, quantity: 1 }];
-    });
-  };
-
-  const updateQuantity = (id: number, quantity: number) => {
-    if (quantity <= 0) {
-      setCurrentOrder(prev => prev.filter(item => item.id !== id));
-    } else {
-      setCurrentOrder(prev =>
-        prev.map(item => item.id === id ? { ...item, quantity } : item)
-      );
-    }
-  };
-
-  const removeFromOrder = (id: number) => {
-    setCurrentOrder(prev => prev.filter(item => item.id !== id));
-  };
-
-  const getOrderTotal = () => {
-    return currentOrder.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-  };
-
-  const getTax = () => {
-    return getOrderTotal() * 0.08; // 8% tax
-  };
-
-  const getFinalTotal = () => {
-    return getOrderTotal() + getTax();
-  };
-
-  const clearOrder = () => {
-    setCurrentOrder([]);
-    setSelectedTable(null);
-  };
-
-  const processPayment = () => {
-    // Simulate payment processing
-    alert(`Payment of $${getFinalTotal().toFixed(2)} processed successfully via ${paymentMethod}!`);
-    clearOrder();
-  };
-
-  const getTableStatusColor = (status: string) => {
-    switch (status) {
-      case 'available':
-        return 'bg-green-100 text-green-800 border-green-200';
-      case 'occupied':
-        return 'bg-orange-100 text-orange-800 border-orange-200';
-      case 'reserved':
-        return 'bg-blue-100 text-blue-800 border-blue-200';
-      default:
-        return 'bg-gray-100 text-gray-800 border-gray-200';
-    }
-  };
-
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -142,356 +31,411 @@ function POSSystem() {
             <div className="flex items-center space-x-4">
               <Link to="/" className="flex items-center text-gray-600 hover:text-orange-500 transition-colors">
                 <ArrowLeft className="h-5 w-5 mr-2" />
-                Back
+                Back to Home
               </Link>
               <div className="flex items-center space-x-2">
                 <Utensils className="h-8 w-8 text-orange-500" />
-                <span className="text-2xl font-bold text-gray-900">TableTap POS</span>
+                <span className="text-2xl font-bold text-gray-900">TableTap</span>
               </div>
             </div>
-            
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-2 text-sm text-gray-600">
-                <Wifi className="h-4 w-4 text-green-500" />
-                <Battery className="h-4 w-4 text-green-500" />
-                <span>Server: Alice Johnson</span>
-              </div>
-              <Settings className="h-6 w-6 text-gray-400 hover:text-orange-500 cursor-pointer transition-colors" />
-            </div>
+            <nav className="hidden md:flex space-x-8">
+              <Link to="/menu" className="text-gray-700 hover:text-orange-500 transition-colors">Digital Menu</Link>
+              <Link to="/pos" className="text-orange-500 font-semibold">POS System</Link>
+              <Link to="/cms" className="text-gray-700 hover:text-orange-500 transition-colors">CMS Platform</Link>
+            </nav>
           </div>
         </div>
       </header>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        {/* Tab Navigation */}
-        <div className="flex space-x-1 mb-6 bg-gray-100 p-1 rounded-lg w-fit">
-          <button
-            onClick={() => setActiveTab('order')}
-            className={`px-6 py-2 rounded-md font-medium transition-colors ${
-              activeTab === 'order'
-                ? 'bg-white text-orange-600 shadow-sm'
-                : 'text-gray-600 hover:text-gray-800'
-            }`}
-          >
-            New Order
-          </button>
-          <button
-            onClick={() => setActiveTab('tables')}
-            className={`px-6 py-2 rounded-md font-medium transition-colors ${
-              activeTab === 'tables'
-                ? 'bg-white text-orange-600 shadow-sm'
-                : 'text-gray-600 hover:text-gray-800'
-            }`}
-          >
-            Tables
-          </button>
-          <button
-            onClick={() => setActiveTab('reports')}
-            className={`px-6 py-2 rounded-md font-medium transition-colors ${
-              activeTab === 'reports'
-                ? 'bg-white text-orange-600 shadow-sm'
-                : 'text-gray-600 hover:text-gray-800'
-            }`}
-          >
-            Reports
-          </button>
+      {/* Hero Section */}
+      <section className="bg-gradient-to-br from-orange-100 via-orange-50 to-white py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div>
+              <div className="inline-flex items-center bg-orange-100 text-orange-800 px-4 py-2 rounded-full text-sm font-medium mb-6">
+                <CreditCard className="h-4 w-4 mr-2" />
+                pos.tabletap.com
+              </div>
+              <h1 className="text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
+                POS System
+                <span className="text-orange-500 block">Built for Speed</span>
+              </h1>
+              <p className="text-xl text-gray-600 mb-8 leading-relaxed">
+                Lightning-fast point of sale system designed specifically for restaurants. Process orders, payments, 
+                and manage your entire operation with the most intuitive POS in the industry.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4">
+                <button className="bg-orange-500 text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-orange-600 transition-all transform hover:scale-105 shadow-lg">
+                  Start Free Trial
+                </button>
+                <button className="border-2 border-gray-800 text-gray-800 px-8 py-4 rounded-lg text-lg font-semibold hover:bg-gray-800 hover:text-white transition-all">
+                  See It In Action
+                </button>
+              </div>
+            </div>
+            <div className="relative">
+              <div className="bg-white rounded-2xl shadow-2xl p-8 transform -rotate-2 hover:rotate-0 transition-transform duration-300">
+                <div className="flex items-center justify-between mb-6">
+                  <div className="flex items-center space-x-2">
+                    <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                    <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                    <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                  </div>
+                  <span className="text-sm font-medium text-gray-600">TableTap POS</span>
+                </div>
+                <div className="grid grid-cols-3 gap-3 mb-6">
+                  <button className="bg-orange-100 text-orange-800 p-3 rounded-lg text-sm font-medium">Salmon $28</button>
+                  <button className="bg-gray-100 text-gray-800 p-3 rounded-lg text-sm font-medium">Caesar $16</button>
+                  <button className="bg-gray-100 text-gray-800 p-3 rounded-lg text-sm font-medium">Pasta $22</button>
+                </div>
+                <div className="space-y-3 mb-6">
+                  <div className="flex justify-between items-center p-3 bg-orange-50 rounded-lg">
+                    <span className="font-medium">Grilled Salmon x1</span>
+                    <span className="text-orange-500 font-bold">$28.00</span>
+                  </div>
+                  <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                    <span className="font-medium">Caesar Salad x1</span>
+                    <span className="text-orange-500 font-bold">$16.00</span>
+                  </div>
+                </div>
+                <div className="border-t pt-3 mb-4">
+                  <div className="flex justify-between font-bold text-lg">
+                    <span>Total</span>
+                    <span className="text-orange-500">$44.00</span>
+                  </div>
+                </div>
+                <button className="w-full bg-orange-500 text-white py-3 rounded-lg font-semibold">
+                  Process Payment
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
+      </section>
 
-        {/* Order Tab */}
-        {activeTab === 'order' && (
-          <div className="grid lg:grid-cols-3 gap-6">
-            {/* Menu Items */}
-            <div className="lg:col-span-2">
-              <div className="bg-white rounded-2xl shadow-lg p-6">
-                <div className="flex justify-between items-center mb-6">
-                  <h2 className="text-2xl font-bold text-gray-800">Menu Items</h2>
-                  <div className="relative">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                    <input
-                      type="text"
-                      placeholder="Search items..."
-                      className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                    />
+      {/* Key Features */}
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-800 mb-4">Why Restaurants Choose TableTap POS</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Built by restaurant experts, for restaurant professionals. Every feature designed to make your life easier.
+            </p>
+          </div>
+          
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="text-center group">
+              <div className="bg-orange-100 w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
+                <Zap className="h-10 w-10 text-orange-500" />
+              </div>
+              <h3 className="text-2xl font-bold text-gray-800 mb-4">Lightning Fast</h3>
+              <p className="text-gray-600">
+                Process orders in under 3 seconds. Our optimized interface means no waiting, no lag, just pure speed.
+              </p>
+            </div>
+
+            <div className="text-center group">
+              <div className="bg-orange-100 w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
+                <Shield className="h-10 w-10 text-orange-500" />
+              </div>
+              <h3 className="text-2xl font-bold text-gray-800 mb-4">Bank-Level Security</h3>
+              <p className="text-gray-600">
+                PCI DSS compliant with end-to-end encryption. Your customers' payment data is always protected.
+              </p>
+            </div>
+
+            <div className="text-center group">
+              <div className="bg-orange-100 w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
+                <Wifi className="h-10 w-10 text-orange-500" />
+              </div>
+              <h3 className="text-2xl font-bold text-gray-800 mb-4">Works Offline</h3>
+              <p className="text-gray-600">
+                Never miss a sale. Our POS works even when internet is down, syncing automatically when reconnected.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Performance Stats */}
+      <section className="py-20" style={{backgroundColor: '#F4F4F4'}}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div>
+              <h2 className="text-4xl font-bold text-gray-800 mb-6">Performance That Drives Results</h2>
+              <div className="space-y-6">
+                <div className="flex items-start">
+                  <div className="bg-orange-500 rounded-full p-2 mr-4 mt-1">
+                    <CheckCircle className="h-5 w-5 text-white" />
+                  </div>
+                  <div>
+                    <h4 className="text-xl font-semibold text-gray-800 mb-2">3x Faster Than Competitors</h4>
+                    <p className="text-gray-600">Independent testing shows TableTap processes orders 3x faster than leading POS systems.</p>
                   </div>
                 </div>
-
-                <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4">
-                  {filteredItems.map(item => (
-                    <button
-                      key={item.id}
-                      onClick={() => addToOrder(item)}
-                      className="p-4 border border-gray-200 rounded-xl hover:border-orange-500 hover:shadow-md transition-all text-left group"
-                    >
-                      <div className="flex justify-between items-start mb-2">
-                        <h3 className="font-semibold text-gray-800 group-hover:text-orange-600 transition-colors">
-                          {item.name}
-                        </h3>
-                        <span className="text-lg font-bold text-orange-500">
-                          ${item.price}
-                        </span>
-                      </div>
-                      <p className="text-sm text-gray-500">{item.category}</p>
-                    </button>
-                  ))}
+                
+                <div className="flex items-start">
+                  <div className="bg-orange-500 rounded-full p-2 mr-4 mt-1">
+                    <CheckCircle className="h-5 w-5 text-white" />
+                  </div>
+                  <div>
+                    <h4 className="text-xl font-semibold text-gray-800 mb-2">99.9% Uptime Guarantee</h4>
+                    <p className="text-gray-600">Rock-solid reliability with redundant systems and 24/7 monitoring. Your POS is always ready.</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start">
+                  <div className="bg-orange-500 rounded-full p-2 mr-4 mt-1">
+                    <CheckCircle className="h-5 w-5 text-white" />
+                  </div>
+                  <div>
+                    <h4 className="text-xl font-semibold text-gray-800 mb-2">5-Minute Setup</h4>
+                    <p className="text-gray-600">Get up and running in minutes, not hours. Our setup wizard handles everything automatically.</p>
+                  </div>
                 </div>
               </div>
             </div>
-
-            {/* Current Order */}
-            <div className="lg:col-span-1">
-              <div className="bg-white rounded-2xl shadow-lg p-6 sticky top-6">
-                <div className="flex justify-between items-center mb-6">
-                  <h2 className="text-xl font-bold text-gray-800">Current Order</h2>
-                  {selectedTable && (
-                    <span className="bg-orange-100 text-orange-800 px-3 py-1 rounded-full text-sm font-medium">
-                      {selectedTable.number}
-                    </span>
-                  )}
-                </div>
-
-                {currentOrder.length === 0 ? (
-                  <div className="text-center py-8">
-                    <ShoppingCart className="h-12 w-12 text-gray-300 mx-auto mb-4" />
-                    <p className="text-gray-500">No items in order</p>
-                  </div>
-                ) : (
-                  <>
-                    <div className="space-y-3 mb-6 max-h-64 overflow-y-auto">
-                      {currentOrder.map(item => (
-                        <div key={item.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                          <div className="flex-1">
-                            <h4 className="font-medium text-gray-800">{item.name}</h4>
-                            <p className="text-sm text-gray-500">${item.price} each</p>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <button
-                              onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                              className="p-1 rounded-full bg-gray-200 hover:bg-gray-300 transition-colors"
-                            >
-                              <Minus className="h-4 w-4" />
-                            </button>
-                            <span className="w-8 text-center font-medium">{item.quantity}</span>
-                            <button
-                              onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                              className="p-1 rounded-full bg-orange-500 hover:bg-orange-600 transition-colors"
-                            >
-                              <Plus className="h-4 w-4 text-white" />
-                            </button>
-                            <button
-                              onClick={() => removeFromOrder(item.id)}
-                              className="p-1 rounded-full bg-red-100 hover:bg-red-200 transition-colors ml-2"
-                            >
-                              <Trash2 className="h-4 w-4 text-red-600" />
-                            </button>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-
-                    <div className="border-t pt-4 space-y-2">
-                      <div className="flex justify-between">
-                        <span>Subtotal:</span>
-                        <span>${getOrderTotal().toFixed(2)}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span>Tax (8%):</span>
-                        <span>${getTax().toFixed(2)}</span>
-                      </div>
-                      <div className="flex justify-between font-bold text-lg border-t pt-2">
-                        <span>Total:</span>
-                        <span>${getFinalTotal().toFixed(2)}</span>
-                      </div>
-                    </div>
-
-                    <div className="mt-6 space-y-3">
-                      <div className="flex space-x-2">
-                        <button
-                          onClick={() => setPaymentMethod('card')}
-                          className={`flex-1 p-3 rounded-lg border-2 transition-colors ${
-                            paymentMethod === 'card'
-                              ? 'border-orange-500 bg-orange-50 text-orange-700'
-                              : 'border-gray-200 hover:border-gray-300'
-                          }`}
-                        >
-                          <CreditCard className="h-5 w-5 mx-auto mb-1" />
-                          <span className="text-sm font-medium">Card</span>
-                        </button>
-                        <button
-                          onClick={() => setPaymentMethod('cash')}
-                          className={`flex-1 p-3 rounded-lg border-2 transition-colors ${
-                            paymentMethod === 'cash'
-                              ? 'border-orange-500 bg-orange-50 text-orange-700'
-                              : 'border-gray-200 hover:border-gray-300'
-                          }`}
-                        >
-                          <DollarSign className="h-5 w-5 mx-auto mb-1" />
-                          <span className="text-sm font-medium">Cash</span>
-                        </button>
-                        <button
-                          onClick={() => setPaymentMethod('split')}
-                          className={`flex-1 p-3 rounded-lg border-2 transition-colors ${
-                            paymentMethod === 'split'
-                              ? 'border-orange-500 bg-orange-50 text-orange-700'
-                              : 'border-gray-200 hover:border-gray-300'
-                          }`}
-                        >
-                          <Users className="h-5 w-5 mx-auto mb-1" />
-                          <span className="text-sm font-medium">Split</span>
-                        </button>
-                      </div>
-
-                      <button
-                        onClick={processPayment}
-                        className="w-full bg-orange-500 text-white py-3 rounded-lg hover:bg-orange-600 transition-colors font-semibold"
-                      >
-                        Process Payment
-                      </button>
-
-                      <div className="flex space-x-2">
-                        <button
-                          onClick={clearOrder}
-                          className="flex-1 bg-gray-100 text-gray-700 py-2 rounded-lg hover:bg-gray-200 transition-colors"
-                        >
-                          Clear
-                        </button>
-                        <button className="flex-1 bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition-colors flex items-center justify-center">
-                          <Printer className="h-4 w-4 mr-2" />
-                          Print
-                        </button>
-                      </div>
-                    </div>
-                  </>
-                )}
+            
+            <div className="grid grid-cols-2 gap-6">
+              <div className="bg-white p-6 rounded-2xl shadow-lg text-center">
+                <Clock className="h-12 w-12 text-orange-500 mx-auto mb-4" />
+                <div className="text-3xl font-bold text-gray-800 mb-2">2.8s</div>
+                <div className="text-gray-600">Average Order Time</div>
+              </div>
+              
+              <div className="bg-white p-6 rounded-2xl shadow-lg text-center">
+                <TrendingUp className="h-12 w-12 text-orange-500 mx-auto mb-4" />
+                <div className="text-3xl font-bold text-gray-800 mb-2">99.9%</div>
+                <div className="text-gray-600">Uptime Guarantee</div>
+              </div>
+              
+              <div className="bg-white p-6 rounded-2xl shadow-lg text-center">
+                <Users className="h-12 w-12 text-orange-500 mx-auto mb-4" />
+                <div className="text-3xl font-bold text-gray-800 mb-2">50K+</div>
+                <div className="text-gray-600">Happy Restaurants</div>
+              </div>
+              
+              <div className="bg-white p-6 rounded-2xl shadow-lg text-center">
+                <DollarSign className="h-12 w-12 text-orange-500 mx-auto mb-4" />
+                <div className="text-3xl font-bold text-gray-800 mb-2">2.1%</div>
+                <div className="text-gray-600">Processing Fee</div>
               </div>
             </div>
           </div>
-        )}
+        </div>
+      </section>
 
-        {/* Tables Tab */}
-        {activeTab === 'tables' && (
-          <div className="bg-white rounded-2xl shadow-lg p-6">
-            <h2 className="text-2xl font-bold text-gray-800 mb-6">Table Management</h2>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {tables.map(table => (
-                <div
-                  key={table.id}
-                  className={`p-6 rounded-xl border-2 cursor-pointer transition-all hover:shadow-md ${getTableStatusColor(table.status)} ${
-                    selectedTable?.id === table.id ? 'ring-2 ring-orange-500' : ''
-                  }`}
-                  onClick={() => setSelectedTable(table)}
-                >
-                  <div className="flex justify-between items-start mb-4">
-                    <h3 className="text-xl font-bold">{table.number}</h3>
-                    <span className="capitalize text-sm font-medium px-2 py-1 rounded-full bg-white bg-opacity-50">
-                      {table.status}
-                    </span>
-                  </div>
-                  
-                  {table.status !== 'available' && (
-                    <>
-                      <div className="space-y-2 text-sm">
-                        <div className="flex items-center">
-                          <Users className="h-4 w-4 mr-2" />
-                          <span>{table.guests} guests</span>
-                        </div>
-                        {table.server && (
-                          <div className="flex items-center">
-                            <span className="w-4 h-4 mr-2 bg-current rounded-full opacity-60"></span>
-                            <span>Server: {table.server}</span>
-                          </div>
-                        )}
-                        {table.orderTotal > 0 && (
-                          <div className="flex items-center">
-                            <DollarSign className="h-4 w-4 mr-2" />
-                            <span>${table.orderTotal.toFixed(2)}</span>
-                          </div>
-                        )}
-                      </div>
-                    </>
-                  )}
-                </div>
-              ))}
+      {/* Features Deep Dive */}
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-800 mb-4">Everything You Need to Run Your Restaurant</h2>
+            <p className="text-xl text-gray-600">Comprehensive POS features designed for the modern restaurant</p>
+          </div>
+          
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="bg-gray-50 p-8 rounded-2xl">
+              <Receipt className="h-12 w-12 text-orange-500 mb-4" />
+              <h3 className="text-xl font-bold text-gray-800 mb-3">Order Management</h3>
+              <p className="text-gray-600">Split bills, modify orders, handle special requests, and manage complex orders with ease.</p>
+            </div>
+            
+            <div className="bg-gray-50 p-8 rounded-2xl">
+              <Package className="h-12 w-12 text-orange-500 mb-4" />
+              <h3 className="text-xl font-bold text-gray-800 mb-3">Inventory Tracking</h3>
+              <p className="text-gray-600">Real-time inventory updates, low stock alerts, and automatic ingredient deduction.</p>
+            </div>
+            
+            <div className="bg-gray-50 p-8 rounded-2xl">
+              <BarChart3 className="h-12 w-12 text-orange-500 mb-4" />
+              <h3 className="text-xl font-bold text-gray-800 mb-3">Sales Analytics</h3>
+              <p className="text-gray-600">Detailed reports on sales, popular items, peak hours, and staff performance.</p>
+            </div>
+            
+            <div className="bg-gray-50 p-8 rounded-2xl">
+              <Users className="h-12 w-12 text-orange-500 mb-4" />
+              <h3 className="text-xl font-bold text-gray-800 mb-3">Staff Management</h3>
+              <p className="text-gray-600">Time tracking, role-based permissions, and performance monitoring for your team.</p>
+            </div>
+            
+            <div className="bg-gray-50 p-8 rounded-2xl">
+              <Smartphone className="h-12 w-12 text-orange-500 mb-4" />
+              <h3 className="text-xl font-bold text-gray-800 mb-3">Mobile Ready</h3>
+              <p className="text-gray-600">Works on tablets, phones, and desktops. Take orders anywhere in your restaurant.</p>
+            </div>
+            
+            <div className="bg-gray-50 p-8 rounded-2xl">
+              <Settings className="h-12 w-12 text-orange-500 mb-4" />
+              <h3 className="text-xl font-bold text-gray-800 mb-3">Easy Integration</h3>
+              <p className="text-gray-600">Connects seamlessly with your existing systems, accounting software, and third-party apps.</p>
             </div>
           </div>
-        )}
+        </div>
+      </section>
 
-        {/* Reports Tab */}
-        {activeTab === 'reports' && (
-          <div className="space-y-6">
-            <div className="grid md:grid-cols-4 gap-6">
-              <div className="bg-white p-6 rounded-2xl shadow-lg">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-600">Today's Sales</p>
-                    <p className="text-2xl font-bold text-gray-900">$2,847</p>
-                  </div>
-                  <DollarSign className="h-8 w-8 text-green-500" />
-                </div>
-                <p className="text-sm text-green-600 mt-2">+12% from yesterday</p>
-              </div>
-
-              <div className="bg-white p-6 rounded-2xl shadow-lg">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-600">Orders</p>
-                    <p className="text-2xl font-bold text-gray-900">127</p>
-                  </div>
-                  <Receipt className="h-8 w-8 text-blue-500" />
-                </div>
-                <p className="text-sm text-blue-600 mt-2">+8% from yesterday</p>
-              </div>
-
-              <div className="bg-white p-6 rounded-2xl shadow-lg">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-600">Avg Order</p>
-                    <p className="text-2xl font-bold text-gray-900">$22.40</p>
-                  </div>
-                  <TrendingUp className="h-8 w-8 text-orange-500" />
-                </div>
-                <p className="text-sm text-orange-600 mt-2">+3% from yesterday</p>
-              </div>
-
-              <div className="bg-white p-6 rounded-2xl shadow-lg">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-600">Peak Hour</p>
-                    <p className="text-2xl font-bold text-gray-900">7-8 PM</p>
-                  </div>
-                  <Clock className="h-8 w-8 text-purple-500" />
-                </div>
-                <p className="text-sm text-purple-600 mt-2">42 orders</p>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-2xl shadow-lg p-6">
-              <h3 className="text-xl font-bold text-gray-800 mb-4">Top Selling Items Today</h3>
-              <div className="space-y-4">
-                {[
-                  { name: "Grilled Salmon", orders: 23, revenue: 644 },
-                  { name: "Caesar Salad", orders: 19, revenue: 304 },
-                  { name: "Truffle Risotto", orders: 15, revenue: 360 },
-                  { name: "Chocolate Cake", orders: 12, revenue: 144 },
-                  { name: "Craft Beer", orders: 28, revenue: 224 }
-                ].map((item, index) => (
-                  <div key={index} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-                    <div>
-                      <h4 className="font-medium text-gray-800">{item.name}</h4>
-                      <p className="text-sm text-gray-500">{item.orders} orders</p>
-                    </div>
-                    <div className="text-right">
-                      <p className="font-semibold text-gray-800">${item.revenue}</p>
-                      <p className="text-sm text-gray-500">revenue</p>
-                    </div>
-                  </div>
+      {/* Testimonials */}
+      <section className="py-20" style={{backgroundColor: '#FFF2E9'}}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-800 mb-4">Trusted by Restaurant Professionals</h2>
+            <p className="text-xl text-gray-600">See what restaurant owners and managers say about TableTap POS</p>
+          </div>
+          
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="bg-white p-8 rounded-2xl shadow-lg border-b-4 border-orange-500">
+              <div className="flex mb-4">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="h-5 w-5 text-orange-400 fill-current" />
                 ))}
               </div>
+              <p className="text-gray-600 mb-6 italic">
+                "We switched from our old POS to TableTap and immediately saw a 40% improvement in order processing speed. Our staff loves how intuitive it is."
+              </p>
+              <div className="flex items-center">
+                <div className="bg-orange-100 w-12 h-12 rounded-full flex items-center justify-center mr-4">
+                  <Utensils className="h-6 w-6 text-orange-500" />
+                </div>
+                <div>
+                  <h4 className="font-semibold text-gray-800">David Kim</h4>
+                  <p className="text-gray-600 text-sm">Owner, Seoul Kitchen</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white p-8 rounded-2xl shadow-lg border-b-4 border-orange-500">
+              <div className="flex mb-4">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="h-5 w-5 text-orange-400 fill-current" />
+                ))}
+              </div>
+              <p className="text-gray-600 mb-6 italic">
+                "The offline capability saved us during a power outage. We kept serving customers while our competitors had to turn people away. Absolutely essential."
+              </p>
+              <div className="flex items-center">
+                <div className="bg-orange-100 w-12 h-12 rounded-full flex items-center justify-center mr-4">
+                  <Utensils className="h-6 w-6 text-orange-500" />
+                </div>
+                <div>
+                  <h4 className="font-semibold text-gray-800">Jennifer Martinez</h4>
+                  <p className="text-gray-600 text-sm">Manager, Coastal Grill</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white p-8 rounded-2xl shadow-lg border-b-4 border-orange-500">
+              <div className="flex mb-4">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="h-5 w-5 text-orange-400 fill-current" />
+                ))}
+              </div>
+              <p className="text-gray-600 mb-6 italic">
+                "The analytics dashboard gives us insights we never had before. We've optimized our menu and increased profits by 25% in just 6 months."
+              </p>
+              <div className="flex items-center">
+                <div className="bg-orange-100 w-12 h-12 rounded-full flex items-center justify-center mr-4">
+                  <Utensils className="h-6 w-6 text-orange-500" />
+                </div>
+                <div>
+                  <h4 className="font-semibold text-gray-800">Michael Brown</h4>
+                  <p className="text-gray-600 text-sm">CEO, Urban Eats Chain</p>
+                </div>
+              </div>
             </div>
           </div>
-        )}
-      </div>
+        </div>
+      </section>
+
+      {/* Pricing Preview */}
+      <section className="py-20 bg-white">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-4xl font-bold text-gray-800 mb-4">Simple, Transparent Pricing</h2>
+          <p className="text-xl text-gray-600 mb-12">No hidden fees, no long-term contracts. Pay only for what you use.</p>
+          
+          <div className="bg-gradient-to-br from-orange-50 to-orange-100 p-8 rounded-2xl border-2 border-orange-200">
+            <div className="text-center mb-6">
+              <div className="text-5xl font-bold text-gray-800 mb-2">2.1%</div>
+              <div className="text-xl text-gray-600">per transaction</div>
+            </div>
+            <ul className="text-left space-y-3 mb-8 max-w-md mx-auto">
+              <li className="flex items-center">
+                <CheckCircle className="h-5 w-5 text-orange-500 mr-3" />
+                <span>No monthly fees</span>
+              </li>
+              <li className="flex items-center">
+                <CheckCircle className="h-5 w-5 text-orange-500 mr-3" />
+                <span>Free hardware included</span>
+              </li>
+              <li className="flex items-center">
+                <CheckCircle className="h-5 w-5 text-orange-500 mr-3" />
+                <span>24/7 support included</span>
+              </li>
+              <li className="flex items-center">
+                <CheckCircle className="h-5 w-5 text-orange-500 mr-3" />
+                <span>All features unlocked</span>
+              </li>
+            </ul>
+            <button className="bg-orange-500 text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-orange-600 transition-all transform hover:scale-105 shadow-lg">
+              Get Started Today
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-20 bg-gradient-to-r from-orange-500 to-orange-600 text-white">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-4xl font-bold mb-4">Ready to Speed Up Your Service?</h2>
+          <p className="text-2xl mb-8 opacity-90">Join 50,000+ restaurants processing millions of orders with TableTap POS</p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
+            <button className="bg-white text-orange-600 px-10 py-4 rounded-lg text-lg font-semibold hover:bg-gray-100 transition-all transform hover:scale-105 shadow-lg">
+              Start Free Trial
+            </button>
+            <button className="border-2 border-white text-white px-10 py-4 rounded-lg text-lg font-semibold hover:bg-white hover:text-orange-600 transition-all">
+              Request Demo
+            </button>
+          </div>
+          <p className="text-sm opacity-75">Free setup • No contracts • 30-day money-back guarantee</p>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="text-white py-16" style={{backgroundColor: '#333333'}}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid md:grid-cols-4 gap-8">
+            <div className="col-span-2">
+              <Link to="/" className="flex items-center space-x-2 mb-6">
+                <Utensils className="h-8 w-8 text-orange-400" />
+                <span className="text-2xl font-bold">TableTap</span>
+              </Link>
+              <p className="text-gray-300 mb-6 max-w-md">
+                Revolutionizing restaurant technology with digital menus, POS systems, and content management platforms.
+              </p>
+            </div>
+            
+            <div>
+              <h4 className="text-lg font-semibold mb-4">Products</h4>
+              <ul className="space-y-2 text-gray-300">
+                <li><Link to="/menu" className="hover:text-orange-400 transition-colors">Digital Menus</Link></li>
+                <li><Link to="/pos" className="hover:text-orange-400 transition-colors">POS System</Link></li>
+                <li><Link to="/cms" className="hover:text-orange-400 transition-colors">CMS Platform</Link></li>
+              </ul>
+            </div>
+            
+            <div>
+              <h4 className="text-lg font-semibold mb-4">Support</h4>
+              <ul className="space-y-2 text-gray-300">
+                <li><a href="#" className="hover:text-orange-400 transition-colors">Help Center</a></li>
+                <li><a href="#" className="hover:text-orange-400 transition-colors">Contact Us</a></li>
+                <li><a href="#" className="hover:text-orange-400 transition-colors">API Docs</a></li>
+              </ul>
+            </div>
+          </div>
+          
+          <div className="border-t border-gray-700 mt-12 pt-8 text-center">
+            <p className="text-gray-400">© 2024 TableTap. All rights reserved.</p>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }

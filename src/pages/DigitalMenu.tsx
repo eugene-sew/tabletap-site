@@ -1,385 +1,395 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { 
   Utensils, 
   ArrowLeft, 
-  Search, 
-  Filter, 
-  Star, 
+  Smartphone, 
+  QrCode, 
   Clock, 
-  Leaf, 
-  Flame,
-  ShoppingCart,
-  Plus,
-  Minus,
-  Heart
+  TrendingUp,
+  Users,
+  Star,
+  CheckCircle,
+  ArrowRight,
+  Zap,
+  Globe,
+  BarChart3,
+  Heart,
+  Wifi,
+  RefreshCw
 } from 'lucide-react';
 
-interface MenuItem {
-  id: number;
-  name: string;
-  description: string;
-  price: number;
-  category: string;
-  image: string;
-  rating: number;
-  prepTime: string;
-  dietary: string[];
-  spiceLevel?: number;
-  popular?: boolean;
-}
-
-const menuItems: MenuItem[] = [
-  {
-    id: 1,
-    name: "Grilled Atlantic Salmon",
-    description: "Fresh Atlantic salmon grilled to perfection, served with seasonal vegetables and lemon herb butter",
-    price: 28,
-    category: "Mains",
-    image: "https://images.pexels.com/photos/1516415/pexels-photo-1516415.jpeg",
-    rating: 4.8,
-    prepTime: "15-20 min",
-    dietary: ["gluten-free", "keto"],
-    popular: true
-  },
-  {
-    id: 2,
-    name: "Truffle Mushroom Risotto",
-    description: "Creamy arborio rice with wild mushrooms, truffle oil, and aged parmesan cheese",
-    price: 24,
-    category: "Mains",
-    image: "https://images.pexels.com/photos/1437267/pexels-photo-1437267.jpeg",
-    rating: 4.6,
-    prepTime: "20-25 min",
-    dietary: ["vegetarian", "gluten-free"]
-  },
-  {
-    id: 3,
-    name: "Caesar Salad",
-    description: "Crisp romaine lettuce, house-made croutons, parmesan cheese, and our signature Caesar dressing",
-    price: 16,
-    category: "Salads",
-    image: "https://images.pexels.com/photos/2097090/pexels-photo-2097090.jpeg",
-    rating: 4.4,
-    prepTime: "5-10 min",
-    dietary: ["vegetarian"]
-  },
-  {
-    id: 4,
-    name: "Spicy Thai Curry",
-    description: "Aromatic red curry with coconut milk, fresh vegetables, and jasmine rice",
-    price: 22,
-    category: "Mains",
-    image: "https://images.pexels.com/photos/2347311/pexels-photo-2347311.jpeg",
-    rating: 4.7,
-    prepTime: "15-20 min",
-    dietary: ["vegan", "gluten-free"],
-    spiceLevel: 3
-  },
-  {
-    id: 5,
-    name: "Chocolate Lava Cake",
-    description: "Warm chocolate cake with a molten center, served with vanilla ice cream",
-    price: 12,
-    category: "Desserts",
-    image: "https://images.pexels.com/photos/291528/pexels-photo-291528.jpeg",
-    rating: 4.9,
-    prepTime: "10-15 min",
-    dietary: ["vegetarian"]
-  },
-  {
-    id: 6,
-    name: "Craft Beer Selection",
-    description: "Local IPA, Wheat Beer, or Stout - Ask your server for today's selection",
-    price: 8,
-    category: "Beverages",
-    image: "https://images.pexels.com/photos/1552630/pexels-photo-1552630.jpeg",
-    rating: 4.3,
-    prepTime: "Immediate",
-    dietary: []
-  }
-];
-
 function DigitalMenu() {
-  const [selectedCategory, setSelectedCategory] = useState('All');
-  const [searchTerm, setSearchTerm] = useState('');
-  const [cart, setCart] = useState<{[key: number]: number}>({});
-  const [favorites, setFavorites] = useState<number[]>([]);
-
-  const categories = ['All', 'Mains', 'Salads', 'Desserts', 'Beverages'];
-
-  const filteredItems = menuItems.filter(item => {
-    const matchesCategory = selectedCategory === 'All' || item.category === selectedCategory;
-    const matchesSearch = item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         item.description.toLowerCase().includes(searchTerm.toLowerCase());
-    return matchesCategory && matchesSearch;
-  });
-
-  const addToCart = (itemId: number) => {
-    setCart(prev => ({
-      ...prev,
-      [itemId]: (prev[itemId] || 0) + 1
-    }));
-  };
-
-  const removeFromCart = (itemId: number) => {
-    setCart(prev => ({
-      ...prev,
-      [itemId]: Math.max((prev[itemId] || 0) - 1, 0)
-    }));
-  };
-
-  const toggleFavorite = (itemId: number) => {
-    setFavorites(prev => 
-      prev.includes(itemId) 
-        ? prev.filter(id => id !== itemId)
-        : [...prev, itemId]
-    );
-  };
-
-  const getTotalItems = () => {
-    return Object.values(cart).reduce((sum, count) => sum + count, 0);
-  };
-
-  const getTotalPrice = () => {
-    return Object.entries(cart).reduce((sum, [itemId, count]) => {
-      const item = menuItems.find(item => item.id === parseInt(itemId));
-      return sum + (item ? item.price * count : 0);
-    }, 0);
-  };
-
-  const getDietaryIcon = (dietary: string) => {
-    switch (dietary) {
-      case 'vegetarian':
-      case 'vegan':
-        return <Leaf className="h-4 w-4 text-green-500" />;
-      case 'gluten-free':
-        return <span className="text-xs font-bold text-blue-500">GF</span>;
-      case 'keto':
-        return <span className="text-xs font-bold text-purple-500">K</span>;
-      default:
-        return null;
-    }
-  };
-
-  const getSpiceIcons = (level: number) => {
-    return Array.from({ length: 3 }, (_, i) => (
-      <Flame 
-        key={i} 
-        className={`h-4 w-4 ${i < level ? 'text-red-500' : 'text-gray-300'}`} 
-      />
-    ));
-  };
-
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <header className="bg-white shadow-sm sticky top-0 z-50">
+      <header className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center space-x-4">
               <Link to="/" className="flex items-center text-gray-600 hover:text-orange-500 transition-colors">
                 <ArrowLeft className="h-5 w-5 mr-2" />
-                Back
+                Back to Home
               </Link>
               <div className="flex items-center space-x-2">
                 <Utensils className="h-8 w-8 text-orange-500" />
-                <span className="text-2xl font-bold text-gray-900">TableTap Menu</span>
+                <span className="text-2xl font-bold text-gray-900">TableTap</span>
               </div>
             </div>
-            <div className="flex items-center space-x-4">
-              <span className="text-sm text-gray-600">Table 12</span>
-              {getTotalItems() > 0 && (
-                <div className="relative">
-                  <ShoppingCart className="h-6 w-6 text-orange-500" />
-                  <span className="absolute -top-2 -right-2 bg-orange-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                    {getTotalItems()}
-                  </span>
-                </div>
-              )}
-            </div>
+            <nav className="hidden md:flex space-x-8">
+              <Link to="/menu" className="text-orange-500 font-semibold">Digital Menu</Link>
+              <Link to="/pos" className="text-gray-700 hover:text-orange-500 transition-colors">POS System</Link>
+              <Link to="/cms" className="text-gray-700 hover:text-orange-500 transition-colors">CMS Platform</Link>
+            </nav>
           </div>
         </div>
       </header>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid lg:grid-cols-4 gap-8">
-          {/* Sidebar */}
-          <div className="lg:col-span-1">
-            <div className="bg-white rounded-2xl shadow-lg p-6 sticky top-24">
-              <h3 className="text-xl font-bold text-gray-800 mb-4">Bella Vista Bistro</h3>
-              <p className="text-gray-600 text-sm mb-6">Authentic Italian cuisine with a modern twist</p>
-              
-              {/* Search */}
-              <div className="relative mb-6">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                <input
-                  type="text"
-                  placeholder="Search menu..."
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
+      {/* Hero Section */}
+      <section className="bg-gradient-to-br from-orange-100 via-orange-50 to-white py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div>
+              <div className="inline-flex items-center bg-orange-100 text-orange-800 px-4 py-2 rounded-full text-sm font-medium mb-6">
+                <Smartphone className="h-4 w-4 mr-2" />
+                menu.tabletap.com
               </div>
-
-              {/* Categories */}
-              <div className="mb-6">
-                <h4 className="font-semibold text-gray-800 mb-3">Categories</h4>
-                <div className="space-y-2">
-                  {categories.map(category => (
-                    <button
-                      key={category}
-                      onClick={() => setSelectedCategory(category)}
-                      className={`w-full text-left px-3 py-2 rounded-lg transition-colors ${
-                        selectedCategory === category
-                          ? 'bg-orange-500 text-white'
-                          : 'text-gray-600 hover:bg-orange-50 hover:text-orange-600'
-                      }`}
-                    >
-                      {category}
-                    </button>
-                  ))}
+              <h1 className="text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
+                Digital Menus
+                <span className="text-orange-500 block">Reimagined</span>
+              </h1>
+              <p className="text-xl text-gray-600 mb-8 leading-relaxed">
+                Transform your restaurant's dining experience with interactive digital menus that customers love. 
+                No more printed menus, instant updates, and seamless ordering - all accessible with a simple QR code scan.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4">
+                <button className="bg-orange-500 text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-orange-600 transition-all transform hover:scale-105 shadow-lg">
+                  Start Free Trial
+                </button>
+                <button className="border-2 border-gray-800 text-gray-800 px-8 py-4 rounded-lg text-lg font-semibold hover:bg-gray-800 hover:text-white transition-all">
+                  View Demo
+                </button>
+              </div>
+            </div>
+            <div className="relative">
+              <div className="bg-white rounded-2xl shadow-2xl p-8 transform rotate-2 hover:rotate-0 transition-transform duration-300">
+                <div className="flex items-center justify-between mb-6">
+                  <QrCode className="h-8 w-8 text-orange-500" />
+                  <span className="text-sm font-medium text-gray-600">Scan & Order</span>
                 </div>
-              </div>
-
-              {/* Cart Summary */}
-              {getTotalItems() > 0 && (
-                <div className="border-t pt-4">
-                  <h4 className="font-semibold text-gray-800 mb-3">Order Summary</h4>
-                  <div className="space-y-2 mb-4">
-                    {Object.entries(cart).map(([itemId, count]) => {
-                      if (count === 0) return null;
-                      const item = menuItems.find(item => item.id === parseInt(itemId));
-                      if (!item) return null;
-                      return (
-                        <div key={itemId} className="flex justify-between text-sm">
-                          <span>{item.name} x{count}</span>
-                          <span>${(item.price * count).toFixed(2)}</span>
-                        </div>
-                      );
-                    })}
-                  </div>
-                  <div className="border-t pt-2 mb-4">
-                    <div className="flex justify-between font-semibold">
-                      <span>Total</span>
-                      <span>${getTotalPrice().toFixed(2)}</span>
+                <h3 className="text-2xl font-bold text-gray-900 mb-4">Bella Vista Menu</h3>
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center p-3 bg-orange-50 rounded-lg">
+                    <div>
+                      <h4 className="font-semibold text-gray-800">Truffle Pasta</h4>
+                      <p className="text-sm text-gray-600">Creamy, aromatic, perfect</p>
                     </div>
+                    <span className="text-orange-500 font-bold">$24</span>
                   </div>
-                  <button className="w-full bg-orange-500 text-white py-2 rounded-lg hover:bg-orange-600 transition-colors">
-                    Place Order
+                  <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                    <div>
+                      <h4 className="font-semibold text-gray-800">Grilled Salmon</h4>
+                      <p className="text-sm text-gray-600">Fresh Atlantic, herb butter</p>
+                    </div>
+                    <span className="text-orange-500 font-bold">$28</span>
+                  </div>
+                  <button className="w-full bg-orange-500 text-white py-3 rounded-lg font-semibold hover:bg-orange-600 transition-colors">
+                    Add to Order
                   </button>
                 </div>
-              )}
-            </div>
-          </div>
-
-          {/* Menu Items */}
-          <div className="lg:col-span-3">
-            <div className="mb-6">
-              <h2 className="text-3xl font-bold text-gray-800 mb-2">
-                {selectedCategory === 'All' ? 'Full Menu' : selectedCategory}
-              </h2>
-              <p className="text-gray-600">
-                {filteredItems.length} item{filteredItems.length !== 1 ? 's' : ''} available
-              </p>
-            </div>
-
-            <div className="grid md:grid-cols-2 gap-6">
-              {filteredItems.map(item => (
-                <div key={item.id} className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
-                  <div className="relative">
-                    <img 
-                      src={item.image} 
-                      alt={item.name}
-                      className="w-full h-48 object-cover"
-                    />
-                    {item.popular && (
-                      <div className="absolute top-4 left-4 bg-orange-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
-                        Popular
-                      </div>
-                    )}
-                    <button
-                      onClick={() => toggleFavorite(item.id)}
-                      className="absolute top-4 right-4 p-2 bg-white rounded-full shadow-lg hover:scale-110 transition-transform"
-                    >
-                      <Heart 
-                        className={`h-5 w-5 ${
-                          favorites.includes(item.id) 
-                            ? 'text-red-500 fill-current' 
-                            : 'text-gray-400'
-                        }`} 
-                      />
-                    </button>
-                  </div>
-                  
-                  <div className="p-6">
-                    <div className="flex justify-between items-start mb-2">
-                      <h3 className="text-xl font-bold text-gray-800">{item.name}</h3>
-                      <span className="text-2xl font-bold text-orange-500">${item.price}</span>
-                    </div>
-                    
-                    <p className="text-gray-600 mb-4">{item.description}</p>
-                    
-                    <div className="flex items-center justify-between mb-4">
-                      <div className="flex items-center space-x-4">
-                        <div className="flex items-center">
-                          <Star className="h-4 w-4 text-orange-400 fill-current mr-1" />
-                          <span className="text-sm font-medium">{item.rating}</span>
-                        </div>
-                        <div className="flex items-center text-gray-500">
-                          <Clock className="h-4 w-4 mr-1" />
-                          <span className="text-sm">{item.prepTime}</span>
-                        </div>
-                      </div>
-                      
-                      <div className="flex items-center space-x-2">
-                        {item.dietary.map(diet => (
-                          <div key={diet} className="flex items-center">
-                            {getDietaryIcon(diet)}
-                          </div>
-                        ))}
-                        {item.spiceLevel && (
-                          <div className="flex">
-                            {getSpiceIcons(item.spiceLevel)}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        <button
-                          onClick={() => removeFromCart(item.id)}
-                          className="p-1 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
-                          disabled={!cart[item.id]}
-                        >
-                          <Minus className="h-4 w-4 text-gray-600" />
-                        </button>
-                        <span className="w-8 text-center font-medium">
-                          {cart[item.id] || 0}
-                        </span>
-                        <button
-                          onClick={() => addToCart(item.id)}
-                          className="p-1 rounded-full bg-orange-500 hover:bg-orange-600 transition-colors"
-                        >
-                          <Plus className="h-4 w-4 text-white" />
-                        </button>
-                      </div>
-                      
-                      <button
-                        onClick={() => addToCart(item.id)}
-                        className="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition-colors font-medium"
-                      >
-                        Add to Order
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ))}
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </section>
+
+      {/* Features Section */}
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-800 mb-4">Why Digital Menus Are the Future</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Say goodbye to outdated printed menus and hello to dynamic, interactive dining experiences
+            </p>
+          </div>
+          
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="text-center group">
+              <div className="bg-orange-100 w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
+                <QrCode className="h-10 w-10 text-orange-500" />
+              </div>
+              <h3 className="text-2xl font-bold text-gray-800 mb-4">Instant Access</h3>
+              <p className="text-gray-600">
+                Customers simply scan a QR code to access your full menu instantly on their phone. No app downloads required.
+              </p>
+            </div>
+
+            <div className="text-center group">
+              <div className="bg-orange-100 w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
+                <RefreshCw className="h-10 w-10 text-orange-500" />
+              </div>
+              <h3 className="text-2xl font-bold text-gray-800 mb-4">Real-Time Updates</h3>
+              <p className="text-gray-600">
+                Update prices, add new dishes, or mark items as sold out instantly. Changes appear immediately for all customers.
+              </p>
+            </div>
+
+            <div className="text-center group">
+              <div className="bg-orange-100 w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
+                <Globe className="h-10 w-10 text-orange-500" />
+              </div>
+              <h3 className="text-2xl font-bold text-gray-800 mb-4">Multi-Language</h3>
+              <p className="text-gray-600">
+                Serve international customers with automatic translation and currency conversion built right in.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Benefits Section */}
+      <section className="py-20" style={{backgroundColor: '#F4F4F4'}}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div>
+              <h2 className="text-4xl font-bold text-gray-800 mb-6">Boost Revenue & Customer Satisfaction</h2>
+              <div className="space-y-6">
+                <div className="flex items-start">
+                  <div className="bg-orange-500 rounded-full p-2 mr-4 mt-1">
+                    <CheckCircle className="h-5 w-5 text-white" />
+                  </div>
+                  <div>
+                    <h4 className="text-xl font-semibold text-gray-800 mb-2">Increase Order Value by 23%</h4>
+                    <p className="text-gray-600">Interactive menus with high-quality photos and detailed descriptions encourage customers to order more.</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start">
+                  <div className="bg-orange-500 rounded-full p-2 mr-4 mt-1">
+                    <CheckCircle className="h-5 w-5 text-white" />
+                  </div>
+                  <div>
+                    <h4 className="text-xl font-semibold text-gray-800 mb-2">Reduce Wait Times by 40%</h4>
+                    <p className="text-gray-600">Customers can browse and decide before staff arrives, speeding up the entire ordering process.</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start">
+                  <div className="bg-orange-500 rounded-full p-2 mr-4 mt-1">
+                    <CheckCircle className="h-5 w-5 text-white" />
+                  </div>
+                  <div>
+                    <h4 className="text-xl font-semibold text-gray-800 mb-2">Zero Printing Costs</h4>
+                    <p className="text-gray-600">Save thousands annually on menu printing, reprinting, and design costs. Update instantly, print never.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div className="grid grid-cols-2 gap-6">
+              <div className="bg-white p-6 rounded-2xl shadow-lg text-center">
+                <TrendingUp className="h-12 w-12 text-orange-500 mx-auto mb-4" />
+                <div className="text-3xl font-bold text-gray-800 mb-2">23%</div>
+                <div className="text-gray-600">Higher Order Value</div>
+              </div>
+              
+              <div className="bg-white p-6 rounded-2xl shadow-lg text-center">
+                <Clock className="h-12 w-12 text-orange-500 mx-auto mb-4" />
+                <div className="text-3xl font-bold text-gray-800 mb-2">40%</div>
+                <div className="text-gray-600">Faster Service</div>
+              </div>
+              
+              <div className="bg-white p-6 rounded-2xl shadow-lg text-center">
+                <Users className="h-12 w-12 text-orange-500 mx-auto mb-4" />
+                <div className="text-3xl font-bold text-gray-800 mb-2">95%</div>
+                <div className="text-gray-600">Customer Satisfaction</div>
+              </div>
+              
+              <div className="bg-white p-6 rounded-2xl shadow-lg text-center">
+                <BarChart3 className="h-12 w-12 text-orange-500 mx-auto mb-4" />
+                <div className="text-3xl font-bold text-gray-800 mb-2">$3.2K</div>
+                <div className="text-gray-600">Annual Savings</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Features Deep Dive */}
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-800 mb-4">Powerful Features Built for Restaurants</h2>
+            <p className="text-xl text-gray-600">Everything you need to create the perfect digital dining experience</p>
+          </div>
+          
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="bg-gray-50 p-8 rounded-2xl">
+              <Zap className="h-12 w-12 text-orange-500 mb-4" />
+              <h3 className="text-xl font-bold text-gray-800 mb-3">Lightning Fast</h3>
+              <p className="text-gray-600">Optimized for speed with instant loading and smooth scrolling, even on slower connections.</p>
+            </div>
+            
+            <div className="bg-gray-50 p-8 rounded-2xl">
+              <Heart className="h-12 w-12 text-orange-500 mb-4" />
+              <h3 className="text-xl font-bold text-gray-800 mb-3">Customer Favorites</h3>
+              <p className="text-gray-600">Let customers save favorites and build personalized dining experiences that keep them coming back.</p>
+            </div>
+            
+            <div className="bg-gray-50 p-8 rounded-2xl">
+              <Star className="h-12 w-12 text-orange-500 mb-4" />
+              <h3 className="text-xl font-bold text-gray-800 mb-3">Reviews & Ratings</h3>
+              <p className="text-gray-600">Built-in review system helps customers discover your best dishes and builds social proof.</p>
+            </div>
+            
+            <div className="bg-gray-50 p-8 rounded-2xl">
+              <Wifi className="h-12 w-12 text-orange-500 mb-4" />
+              <h3 className="text-xl font-bold text-gray-800 mb-3">Works Offline</h3>
+              <p className="text-gray-600">Smart caching ensures your menu works even when WiFi is spotty or customers have poor signal.</p>
+            </div>
+            
+            <div className="bg-gray-50 p-8 rounded-2xl">
+              <BarChart3 className="h-12 w-12 text-orange-500 mb-4" />
+              <h3 className="text-xl font-bold text-gray-800 mb-3">Analytics Dashboard</h3>
+              <p className="text-gray-600">Track what customers view most, popular items, and optimize your menu for maximum revenue.</p>
+            </div>
+            
+            <div className="bg-gray-50 p-8 rounded-2xl">
+              <Users className="h-12 w-12 text-orange-500 mb-4" />
+              <h3 className="text-xl font-bold text-gray-800 mb-3">Group Ordering</h3>
+              <p className="text-gray-600">Perfect for large tables - everyone can add to the same order from their own device.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials */}
+      <section className="py-20" style={{backgroundColor: '#FFF2E9'}}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-800 mb-4">Loved by Restaurants Everywhere</h2>
+            <p className="text-xl text-gray-600">See how digital menus transformed these businesses</p>
+          </div>
+          
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="bg-white p-8 rounded-2xl shadow-lg border-b-4 border-orange-500">
+              <div className="flex mb-4">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="h-5 w-5 text-orange-400 fill-current" />
+                ))}
+              </div>
+              <p className="text-gray-600 mb-6 italic">
+                "Our customers love the digital menus! We've seen a 30% increase in dessert orders since adding photos and descriptions. The QR code system is so simple."
+              </p>
+              <div className="flex items-center">
+                <div className="bg-orange-100 w-12 h-12 rounded-full flex items-center justify-center mr-4">
+                  <Utensils className="h-6 w-6 text-orange-500" />
+                </div>
+                <div>
+                  <h4 className="font-semibold text-gray-800">Sarah Chen</h4>
+                  <p className="text-gray-600 text-sm">Owner, Garden Bistro</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white p-8 rounded-2xl shadow-lg border-b-4 border-orange-500">
+              <div className="flex mb-4">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="h-5 w-5 text-orange-400 fill-current" />
+                ))}
+              </div>
+              <p className="text-gray-600 mb-6 italic">
+                "The real-time updates are a game changer. When we run out of the daily special, we just mark it unavailable instantly. No more disappointed customers."
+              </p>
+              <div className="flex items-center">
+                <div className="bg-orange-100 w-12 h-12 rounded-full flex items-center justify-center mr-4">
+                  <Utensils className="h-6 w-6 text-orange-500" />
+                </div>
+                <div>
+                  <h4 className="font-semibold text-gray-800">Marco Rodriguez</h4>
+                  <p className="text-gray-600 text-sm">Chef, Coastal Kitchen</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white p-8 rounded-2xl shadow-lg border-b-4 border-orange-500">
+              <div className="flex mb-4">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="h-5 w-5 text-orange-400 fill-current" />
+                ))}
+              </div>
+              <p className="text-gray-600 mb-6 italic">
+                "We saved over $2,000 in printing costs in the first year alone. Plus, our international customers love the translation feature."
+              </p>
+              <div className="flex items-center">
+                <div className="bg-orange-100 w-12 h-12 rounded-full flex items-center justify-center mr-4">
+                  <Utensils className="h-6 w-6 text-orange-500" />
+                </div>
+                <div>
+                  <h4 className="font-semibold text-gray-800">Lisa Thompson</h4>
+                  <p className="text-gray-600 text-sm">Manager, Downtown Deli</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-20 bg-gradient-to-r from-orange-500 to-orange-600 text-white">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-4xl font-bold mb-4">Ready to Go Digital?</h2>
+          <p className="text-2xl mb-8 opacity-90">Join 10,000+ restaurants already using TableTap Digital Menus</p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
+            <button className="bg-white text-orange-600 px-10 py-4 rounded-lg text-lg font-semibold hover:bg-gray-100 transition-all transform hover:scale-105 shadow-lg">
+              Start Free Trial
+            </button>
+            <button className="border-2 border-white text-white px-10 py-4 rounded-lg text-lg font-semibold hover:bg-white hover:text-orange-600 transition-all">
+              Schedule Demo
+            </button>
+          </div>
+          <p className="text-sm opacity-75">No credit card required • Setup in under 5 minutes • 30-day free trial</p>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="text-white py-16" style={{backgroundColor: '#333333'}}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid md:grid-cols-4 gap-8">
+            <div className="col-span-2">
+              <Link to="/" className="flex items-center space-x-2 mb-6">
+                <Utensils className="h-8 w-8 text-orange-400" />
+                <span className="text-2xl font-bold">TableTap</span>
+              </Link>
+              <p className="text-gray-300 mb-6 max-w-md">
+                Revolutionizing restaurant technology with digital menus, POS systems, and content management platforms.
+              </p>
+            </div>
+            
+            <div>
+              <h4 className="text-lg font-semibold mb-4">Products</h4>
+              <ul className="space-y-2 text-gray-300">
+                <li><Link to="/menu" className="hover:text-orange-400 transition-colors">Digital Menus</Link></li>
+                <li><Link to="/pos" className="hover:text-orange-400 transition-colors">POS System</Link></li>
+                <li><Link to="/cms" className="hover:text-orange-400 transition-colors">CMS Platform</Link></li>
+              </ul>
+            </div>
+            
+            <div>
+              <h4 className="text-lg font-semibold mb-4">Support</h4>
+              <ul className="space-y-2 text-gray-300">
+                <li><a href="#" className="hover:text-orange-400 transition-colors">Help Center</a></li>
+                <li><a href="#" className="hover:text-orange-400 transition-colors">Contact Us</a></li>
+                <li><a href="#" className="hover:text-orange-400 transition-colors">API Docs</a></li>
+              </ul>
+            </div>
+          </div>
+          
+          <div className="border-t border-gray-700 mt-12 pt-8 text-center">
+            <p className="text-gray-400">© 2024 TableTap. All rights reserved.</p>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
