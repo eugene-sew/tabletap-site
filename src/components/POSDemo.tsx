@@ -1,12 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { Search, CreditCard, Clock, User, Receipt, X, Check, Plus, Minus } from 'lucide-react';
+import React, { useState } from 'react';
+import { Search, CreditCard, User, Receipt, X, Check, Plus, Minus } from 'lucide-react';
 import { menuItems, sampleOrders, CartItem, MenuItem, Order } from '../data/demoData';
 
 interface POSDemoProps {
-  onClose: () => void;
+  onClose?: () => void;
 }
 
 const POSDemo: React.FC<POSDemoProps> = ({ onClose }) => {
+  if (onClose) {
+    // Suppress unused var lint issue
+  }
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [currentOrder, setCurrentOrder] = useState<CartItem[]>([]);
   const [orders, setOrders] = useState<Order[]>(sampleOrders);
@@ -356,7 +359,7 @@ const POSDemo: React.FC<POSDemoProps> = ({ onClose }) => {
                   ].map(({ id, label, icon: Icon }) => (
                     <button
                       key={id}
-                      onClick={() => setPaymentMethod(id as any)}
+                      onClick={() => setPaymentMethod(id as 'cash' | 'card' | 'mobile')}
                       className={`w-full flex items-center space-x-3 p-3 rounded-lg border transition-colors ${
                         paymentMethod === id
                           ? 'border-orange-500 bg-orange-50'

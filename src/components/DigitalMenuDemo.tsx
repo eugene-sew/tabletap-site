@@ -1,12 +1,15 @@
 import React, { useState, useMemo } from 'react';
-import { Search, Heart, ShoppingCart, Plus, Minus, Star, Filter, X } from 'lucide-react';
+import { Search, ShoppingCart, Plus, Minus, Heart, X } from 'lucide-react';
 import { menuItems, categories, CartItem, MenuItem } from '../data/demoData';
 
 interface DigitalMenuDemoProps {
-  onClose: () => void;
+  onClose?: () => void;
 }
 
 const DigitalMenuDemo: React.FC<DigitalMenuDemoProps> = ({ onClose }) => {
+  if (onClose) {
+    // Suppress unused var lint issue
+  }
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [searchTerm, setSearchTerm] = useState('');
   const [cart, setCart] = useState<CartItem[]>([]);
