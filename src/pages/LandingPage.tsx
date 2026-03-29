@@ -2,14 +2,14 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, useInView, useMotionValue, useTransform, animate } from 'framer-motion';
 import {
-  ArrowRight, Menu, Phone, Mail, MapPin, Star, Check,
+  ArrowRight, Phone, Mail, MapPin, Star, Check,
   Zap, Shield, BarChart3, QrCode, Clock, Users, Twitter, Instagram, Linkedin,
   ChevronDown, Sparkles, Globe, Layers
 } from 'lucide-react';
-import {
-  PhoneMockup, LaptopMockup, TabletMockup,
-  DigitalMenuContent, POSContent, CMSContent
-} from '../components/DeviceMockups';
+import heroImage from '../assets/hero.png';
+import phoneImage from '../assets/phone.webp';
+import consoleImage from '../assets/console.webp';
+import posImage from '../assets/pos.png';
 
 // ── Scroll-animated section wrapper ─────────────────────────────────────────
 const FadeUp: React.FC<{ children: React.ReactNode; delay?: number; className?: string }> = ({
@@ -243,58 +243,28 @@ const Hero: React.FC = () => (
           </motion.div>
         </div>
 
-        {/* Right — 3D device scene */}
-        <div className="relative flex items-center justify-center" style={{ perspective: '1200px', minHeight: 520 }}>
-          {/* Laptop — center, slightly back */}
+        {/* Right — Hero Image */}
+        <div className="relative flex items-center justify-center min-h-[520px]">
           <motion.div
-            initial={{ opacity: 0, y: 60, rotateX: 15 }}
-            animate={{ opacity: 1, y: 0, rotateX: 0 }}
+            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
-            className="absolute"
-            style={{ zIndex: 2, transform: 'translateX(20px) translateY(10px) rotateY(-6deg)' }}
-          >
-            <motion.div
-              animate={{ y: [0, -8, 0] }}
-              transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-            >
-              <LaptopMockup><CMSContent /></LaptopMockup>
-            </motion.div>
-          </motion.div>
-
-          {/* Phone — left front */}
-          <motion.div
-            initial={{ opacity: 0, x: -60 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.9, delay: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            className="absolute"
-            style={{ zIndex: 3, left: -10, bottom: 0 }}
-          >
-            <motion.div
-              animate={{ y: [0, -12, 0] }}
-              transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
-            >
-              <PhoneMockup><DigitalMenuContent /></PhoneMockup>
-            </motion.div>
-          </motion.div>
-
-          {/* Tablet — right front */}
-          <motion.div
-            initial={{ opacity: 0, x: 60 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.9, delay: 0.7, ease: [0.22, 1, 0.36, 1] }}
-            className="absolute"
-            style={{ zIndex: 3, right: -20, bottom: 20 }}
+            className="relative z-10 w-full"
           >
             <motion.div
               animate={{ y: [0, -10, 0] }}
-              transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
+              transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
             >
-              <TabletMockup><POSContent /></TabletMockup>
+              <img
+                src={heroImage}
+                alt="TableTap ecosystem"
+                className="w-full h-auto scale-150 drop-shadow-[0_35px_35px_rgba(0,0,0,0.5)]"
+              />
             </motion.div>
           </motion.div>
 
-          {/* Glow under devices */}
-          <div className="absolute bottom-10 left-1/2 -translate-x-1/2 w-80 h-20 bg-orange-500/20 blur-3xl rounded-full" />
+          {/* Enhanced Glow under image */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-[500px] aspect-square bg-orange-500/15 blur-[120px] rounded-full pointer-events-none" />
         </div>
       </div>
 
@@ -420,7 +390,7 @@ const ProductShowcase: React.FC = () => {
         { icon: Zap, text: 'Orders appear in the console instantly' },
         { icon: Clock, text: 'Menu updates propagate in real-time' },
       ],
-      device: <PhoneMockup><DigitalMenuContent /></PhoneMockup>,
+      image: phoneImage,
       align: 'left',
       accent: 'orange',
     },
@@ -434,7 +404,7 @@ const ProductShowcase: React.FC = () => {
         { icon: Shield, text: 'Offline mode for connectivity gaps' },
         { icon: BarChart3, text: 'End-of-day sales reports' },
       ],
-      device: <TabletMockup><POSContent /></TabletMockup>,
+      image: posImage,
       align: 'right',
       accent: 'blue',
     },
@@ -448,7 +418,7 @@ const ProductShowcase: React.FC = () => {
         { icon: Shield, text: 'Full audit log of every action' },
         { icon: Globe, text: 'Multi-location ready' },
       ],
-      device: <LaptopMockup><CMSContent /></LaptopMockup>,
+      image: consoleImage,
       align: 'left',
       accent: 'purple',
     },
@@ -457,7 +427,7 @@ const ProductShowcase: React.FC = () => {
   return (
     <section id="products" className="py-28 bg-gray-950">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-32">
-        {products.map(({ tag, headline, sub, bullets, device, align, accent }) => (
+        {products.map(({ tag, headline, sub, bullets, image, align, accent }) => (
           <div key={tag} className={`grid lg:grid-cols-2 gap-16 items-center ${align === 'right' ? 'lg:[&>*:first-child]:order-2 lg:[&>*:last-child]:order-1' : ''}`}>
             {/* Copy */}
             <FadeUp>
@@ -487,8 +457,14 @@ const ProductShowcase: React.FC = () => {
               <div className="flex items-center justify-center relative">
                 <div className={`absolute inset-0 blur-3xl opacity-20 rounded-full
                   ${accent === 'orange' ? 'bg-orange-500' : accent === 'blue' ? 'bg-blue-500' : 'bg-purple-500'}`} />
-                <TiltCard intensity={5} className="relative z-10">
-                  {device}
+                <TiltCard intensity={5} className={`relative z-10 w-full flex justify-center
+                  ${tag === 'Digital Menu' ? 'max-w-[300px]' : 
+                    tag === 'POS Terminal' ? 'max-w-lg' : 'max-w-2xl'}`}>
+                  <img 
+                    src={image} 
+                    alt={headline} 
+                    className="w-full h-auto drop-shadow-2xl rounded-2xl"
+                  />
                 </TiltCard>
               </div>
             </FadeUp>
