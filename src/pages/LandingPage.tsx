@@ -700,7 +700,7 @@ const Contact: React.FC = () => {
             <div className="space-y-6">
               {[
                 { icon: Phone, label: 'Call Us', value: '0537211043', href: 'tel:0537211043' },
-                { icon: Mail, label: 'Email Us', value: 'info@datasight.inc', href: 'mailto:info@datasight.inc' },
+                { icon: Mail, label: 'Email Us', value: 'hello@tabletap.space', href: 'mailto:hello@tabletap.space' },
                 { icon: MapPin, label: 'Offices', value: 'Accra · Ho · Kumasi', href: '#' },
               ].map(({ icon: Icon, label, value, href }) => (
                 <div key={label} className="flex items-center gap-4">
